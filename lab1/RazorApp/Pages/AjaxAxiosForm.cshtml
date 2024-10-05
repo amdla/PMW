@@ -1,0 +1,77 @@
+﻿@page
+@model RazorApp.Pages.AjaxAxiosForm
+
+@{
+    ViewData["Title"] = "AjaxAxiosForm";
+    Layout = "_Layout";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Form with AJAX & Axios + Vanilla JS instead of JQuery</h1>
+</div>
+
+<div class="container mt-5">
+    <form id="ajaxForm" method="post">
+        <div class="form-group">
+            <label for="Name">Name:</label>
+            <input type="text" class="form-control" id="Name" name="Name" required>
+        </div>
+        <div class="form-group">
+            <label for="Surname">Surname:</label>
+            <input type="text" class="form-control" id="Surname" name="Surname" required>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+    </form>
+
+    <div id="result" class="mt-4" style="display: none;">
+        <h2>Submitted Information:</h2>
+        <p>Name: <span id="submittedName"></span></p>
+        <p>Surname: <span id="submittedSurname"></span></p>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('ajaxForm');
+        const result = document.getElementById('result');
+        const submittedName = document.getElementById('submittedName');
+        const submittedSurname = document.getElementById('submittedSurname');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+
+            axios.post('/AjaxJSForm', formData)
+                .then(function(response) {
+                    const data = response.data;
+                    if (data.success) {
+                        submittedName.textContent = data.name;
+                        submittedSurname.textContent = data.surname;
+                        result.style.display = 'block';
+
+                        // Display success message
+                        const alert = document.createElement('div');
+                        alert.className = 'alert alert-success mt-3';
+                        alert.textContent = data.message;
+                        form.insertAdjacentElement('beforebegin', alert);
+
+                        setTimeout(() => {
+                            alert.style.transition = 'opacity 0.4s';
+                            alert.style.opacity = '0';
+                            setTimeout(() => alert.remove(), 400);
+                        }, 3000);
+                    } else {
+                        alert('An error occurred. Please try again.');
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                });
+        });
+    });
+    </script>
+}

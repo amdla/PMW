@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace RazorApp.Pages;
 
-public class AjaxJSForm : PageModel
+public class AjaxAxiosForm : PageModel
 {
     [BindProperty] public string Name { get; set; }
 
@@ -23,7 +23,7 @@ public class AjaxJSForm : PageModel
                 success = true,
                 message = "Form submitted successfully!",
                 name = Name,
-                surname = Surname
+                surname = Surname,
             });
         }
 
