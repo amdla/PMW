@@ -1,0 +1,70 @@
+﻿@page
+@model RazorApp.Pages.AjaxJSForm
+
+@{
+    ViewData["Title"] = "AjaxJSForm";
+    Layout = "_Layout";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Form with AJAX & JS</h1>
+</div>
+
+<div class="container mt-5">
+    <form id="ajaxForm" method="post">
+        <div class="form-group">
+            <label for="Name">Name:</label>
+            <input type="text" class="form-control" id="Name" name="Name" required>
+        </div>
+        <div class="form-group">
+            <label for="Surname">Surname:</label>
+            <input type="text" class="form-control" id="Surname" name="Surname" required>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+    </form>
+
+    <div id="result" class="mt-4" style="display: none;">
+        <h2>Submitted Information:</h2>
+        <p>Name: <span id="submittedName"></span></p>
+        <p>Surname: <span id="submittedSurname"></span></p>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('#ajaxForm').submit(function(e) {
+            e.preventDefault();
+
+            // async request to the server
+            $.ajax({
+                url: '/AjaxJSForm',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    if (response.success) {
+                        $('#submittedName').text(response.name);
+                        $('#submittedSurname').text(response.surname);
+                        // skoro w drugim pliku zadeklarowalismy response jako success, message, name i surname,
+                        // to dlaczego surname jest oznaczone jako warning???
+                        $('#result').show();
+
+                        // Display success message
+                        $('<div class="alert alert-success mt-3">')
+                            .text(response.message)
+                            .insertBefore('#ajaxForm')
+                            .delay(3000)
+                            .fadeOut(400, function() { $(this).remove(); });
+                    } else {
+                        alert('An error occurred. Please try again.');
+                    }
+                },
+                error: function() {
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        });
+    });
+</script>
+}
