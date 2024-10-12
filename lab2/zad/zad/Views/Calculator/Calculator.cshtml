@@ -2,8 +2,7 @@
 
 <h2>Kalkulator</h2>
 
-@using (Html.BeginForm())
-{
+<form asp-action="Calculator" method="post">
     <div>
         @Html.LabelFor(m => m.Number1, "Pierwsza liczba:")
         @Html.TextBoxFor(m => m.Number1, new { type = "number", step = "any" })
@@ -12,12 +11,15 @@
         @Html.LabelFor(m => m.Number2, "Druga liczba:")
         @Html.TextBoxFor(m => m.Number2, new { type = "number", step = "any" })
     </div>
-    <input type="submit" value="Dodaj"/>
+    <div>
+        <button type="submit">Calculate</button>
+    </div>
+</form>
 
-    @if (Model.Result != 0)
-    {
-        <div>
-            <strong>Wynik: @Model.Result</strong>
-        </div>
-    }
+@if (Model != null)
+{
+    <div>
+        <strong>Wynik: @Model.Result</strong>
+    </div>
+}
 }
