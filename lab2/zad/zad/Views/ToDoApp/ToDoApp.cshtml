@@ -1,6 +1,27 @@
-﻿@model ToDoAppModel
+﻿@model zad.Models.ToDoAppModel
 
-<h2>TODO app</h2>
+<h2>TODO App</h2>
 
+<form asp-action="AddTask" method="post">
+    <input asp-for="NewTask" placeholder="Nowe zadanie"/>
+    <button type="submit">Dodaj</button>
+</form>
 
-}
+<ul>
+    @for (int i = 0; i < Model.Items.Count; i++)
+    {
+        <li>
+            <span style="text-decoration: @(Model.Items[i].IsCompleted ? "line-through" : "none")">
+                @Model.Items[i].Task
+            </span>
+            <form asp-action="ToggleComplete" method="post" style="display: inline;">
+                <input type="hidden" name="index" value="@i"/>
+                <button type="submit">@(Model.Items[i].IsCompleted ? "Przywróć" : "Zakończ")</button>
+            </form>
+            <form asp-action="DeleteTask" method="post" style="display: inline;">
+                <input type="hidden" name="index" value="@i"/>
+                <button type="submit">Usuń</button>
+            </form>
+        </li>
+    }
+</ul>
