@@ -28,3 +28,4 @@ C:\Users\macie\RiderProjects\PMW\lab2\zad\zad\obj\Debug\net7.0\refint\zad.dll
 C:\Users\macie\RiderProjects\PMW\lab2\zad\zad\obj\Debug\net7.0\zad.pdb
 C:\Users\macie\RiderProjects\PMW\lab2\zad\zad\obj\Debug\net7.0\zad.genruntimeconfig.cache
 C:\Users\macie\RiderProjects\PMW\lab2\zad\zad\obj\Debug\net7.0\ref\zad.dll
+C:\Users\macie\RiderProjects\PMW\lab2\zad\zad\obj\Debug\net7.0\zad.sourcelink.json
