@@ -1,0 +1,76 @@
+<h2>Favorite Quotes - Local Storage Version</h2>
+
+<input id="newQuoteInput" placeholder="New quote"/>
+<button onclick="addQuote()">Add</button>
+
+<ul id="quotesList"></ul>
+
+<script>
+    document.addEventListener('DOMContentLoaded', loadQuotes);
+
+    function loadQuotes() {
+        let quotes = JSON.parse(localStorage.getItem('quotes')) || [];
+        const quotesList = document.getElementById('quotesList');
+        quotesList.innerHTML = '';
+
+        quotes.forEach((quote, index) => {
+            let quoteItem = document.createElement('li');
+            quoteItem.innerHTML = `
+                <span id="quoteText-${index}">${quote}</span>
+                <button id="editBtn-${index}" onclick="editQuote(${index})">Edit</button>
+                <button onclick="deleteQuote(${index})">Delete</button>
+            `;
+            quotesList.appendChild(quoteItem);
+        });
+    }
+
+    function addQuote() {
+        const newQuoteInput = document.getElementById('newQuoteInput');
+        const newQuote = newQuoteInput.value.trim();
+        if (!newQuote) return;
+
+        let quotes = JSON.parse(localStorage.getItem('quotes')) || [];
+        quotes.push(newQuote);
+        localStorage.setItem('quotes', JSON.stringify(quotes));
+        newQuoteInput.value = '';
+        loadQuotes();
+    }
+
+    function deleteQuote(index) {
+        let quotes = JSON.parse(localStorage.getItem('quotes')) || [];
+        quotes.splice(index, 1);
+        localStorage.setItem('quotes', JSON.stringify(quotes));
+        loadQuotes();
+    }
+
+    function editQuote(index) {
+        const quoteTextElement = document.getElementById(`quoteText-${index}`);
+        const editBtn = document.getElementById(`editBtn-${index}`);
+        const currentQuote = quoteTextElement.innerText;
+
+        // Check if the quote is already being edited
+        if (editBtn.disabled) return;
+
+        // Disable the Edit button to prevent further clicks
+        editBtn.disabled = true;
+
+        // Replace the quote text with an input field for editing
+        quoteTextElement.innerHTML = `
+            <input id="editQuoteInput-${index}" value="${currentQuote}" />
+            <button onclick="saveEditedQuote(${index})">Save</button>
+        `;
+    }
+
+    function saveEditedQuote(index) {
+        const editQuoteInput = document.getElementById(`editQuoteInput-${index}`);
+        const updatedQuote = editQuoteInput.value.trim();
+
+        if (!updatedQuote) return;
+
+        let quotes = JSON.parse(localStorage.getItem('quotes')) || [];
+        quotes[index] = updatedQuote;
+        localStorage.setItem('quotes', JSON.stringify(quotes));
+
+        loadQuotes();  // Reload the list to reflect the changes
+    }
+</script>

@@ -9,7 +9,7 @@ namespace zad.Controllers
         private const string SessionKey = "ToDoList";
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult ToDoApp()
         {
             var model = new ToDoAppModel
             {
@@ -28,7 +28,7 @@ namespace zad.Controllers
                 HttpContext.Session.Set(SessionKey, items);
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ToDoApp));
         }
 
         [HttpPost]
@@ -41,7 +41,7 @@ namespace zad.Controllers
                 HttpContext.Session.Set(SessionKey, items);
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ToDoApp));
         }
 
         [HttpPost]
@@ -54,7 +54,7 @@ namespace zad.Controllers
                 HttpContext.Session.Set(SessionKey, items);
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ToDoApp));
         }
     }
 }
