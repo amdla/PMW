@@ -1,0 +1,28 @@
+@model Book
+
+<h2>Edit Book</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label for="Name">Book Name</label>
+        <input type="text" class="form-control" asp-for="Name" />
+    </div>
+    <div class="form-group">
+        <label for="Author">Author</label>
+        <input type="text" class="form-control" asp-for="Author" />
+    </div>
+    <div class="form-group">
+        <label for="IsAvailable">Available</label>
+        <input type="checkbox" asp-for="IsAvailable" />
+    </div>
+    <div class="form-group">
+        <label for="YearOfPublish">Year of Publish</label>
+        <input type="number" class="form-control" asp-for="YearOfPublish" />
+    </div>
+    <div class="form-group">
+        <label for="LiteraryGenre">Literary Genre</label>
+        <input type="text" class="form-control" asp-for="LiteraryGenre" />
+    </div>
+    <button type="submit" class="btn btn-primary">Update Book</button>
+</form>

@@ -1,0 +1,10 @@
+[
+  {
+    "Id": 2,
+    "Name": "198",
+    "Author": "George Orwell",
+    "IsAvailable": false,
+    "YearOfPublish": 1949,
+    "LiteraryGenre": "Dystopian"
+  }
+]
