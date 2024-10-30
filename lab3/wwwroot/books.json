@@ -27,15 +27,6 @@
     "Price": 16.0
   },
   {
-    "Id": 5,
-    "Name": "suttsutsutsu",
-    "Author": "tustsutsfutufs",
-    "IsAvailable": true,
-    "YearOfPublish": 1750,
-    "LiteraryGenre": "Old",
-    "Price": 33.0
-  },
-  {
     "Id": 6,
     "Name": "1984",
     "Author": "George Orwell",
@@ -43,5 +34,14 @@
     "YearOfPublish": 1990,
     "LiteraryGenre": "Dystopian",
     "Price": 11.0
+  },
+  {
+    "Id": 7,
+    "Name": "tfjtfstsf",
+    "Author": "fgstgfftgu",
+    "IsAvailable": true,
+    "YearOfPublish": 2000,
+    "LiteraryGenre": "ghfj",
+    "Price": 123.0
   }
 ]
