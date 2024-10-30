@@ -23,7 +23,7 @@ namespace lab3.Controllers
 
         // Action to display all books
         public IActionResult Index(string searchQuery, string authorFilter, string genreFilter, int? yearFilter,
-            string sortOrder, float? priceFilter)
+            string sortOrder, string availabilityFilter, float? priceFilter)
         {
             // Read books from JSON
             var books = ReadJsonFile();
@@ -51,17 +51,24 @@ namespace lab3.Controllers
                 books = books.Where(b => b.Author.Equals(authorFilter, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
-            // Filter by genre
-            if (!string.IsNullOrEmpty(genreFilter))
+            //filter by availability
+            if (!string.IsNullOrEmpty(availabilityFilter))
             {
-                books = books.Where(b => b.LiteraryGenre.Equals(genreFilter, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
+                books = books.Where(b =>
+                    b.IsAvailable.ToString().Equals(availabilityFilter, StringComparison.OrdinalIgnoreCase)).ToList();
             }
 
             // Filter by year
             if (yearFilter.HasValue)
             {
                 books = books.Where(b => b.YearOfPublish == yearFilter.Value).ToList();
+            }
+
+            // Filter by genre
+            if (!string.IsNullOrEmpty(genreFilter))
+            {
+                books = books.Where(b => b.LiteraryGenre.Equals(genreFilter, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
             }
 
             // Sorting
@@ -160,6 +167,42 @@ namespace lab3.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Reports()
+        {
+            var books = ReadJsonFile();
+
+            // 1. Author distribution data
+            var authorGroups = books.GroupBy(b => b.Author)
+                .Select(g => new { Author = g.Key, Count = g.Count() })
+                .ToList();
+
+            ViewBag.AuthorLabels = authorGroups.Select(g => g.Author).ToList();
+            ViewBag.AuthorData = authorGroups.Select(g => g.Count).ToList();
+
+            // 2. Genre distribution data
+            var genreGroups = books.GroupBy(b => b.LiteraryGenre)
+                .Select(g => new { Genre = g.Key, Count = g.Count() })
+                .ToList();
+
+            ViewBag.GenreLabels = genreGroups.Select(g => g.Genre).ToList();
+            ViewBag.GenreData = genreGroups.Select(g => g.Count).ToList();
+
+            // 3. Price range distribution
+            var priceRanges = new[] { "0-10", "10-20", "20-30", "30+" };
+            var priceData = new List<int>
+            {
+                books.Count(b => b.Price < 10),
+                books.Count(b => b.Price is >= 10 and < 20),
+                books.Count(b => b.Price is >= 20 and < 30),
+                books.Count(b => b.Price >= 30)
+            };
+
+            ViewBag.PriceLabels = priceRanges;
+            ViewBag.PriceData = priceData;
+
+            return View();
         }
     }
 }

@@ -6,7 +6,7 @@
     "IsAvailable": false,
     "YearOfPublish": 1949,
     "LiteraryGenre": "Dystopian",
-    "Price": 2137.0
+    "Price": 1.0
   },
   {
     "Id": 3,
@@ -14,8 +14,8 @@
     "Author": "srtyisiry",
     "IsAvailable": false,
     "YearOfPublish": 2004,
-    "LiteraryGenre": "SFS",
-    "Price": 999.0
+    "LiteraryGenre": "SF",
+    "Price": 15.0
   },
   {
     "Id": 4,
@@ -24,6 +24,24 @@
     "IsAvailable": true,
     "YearOfPublish": 2000,
     "LiteraryGenre": "SF",
-    "Price": 15331.0
+    "Price": 16.0
+  },
+  {
+    "Id": 5,
+    "Name": "suttsutsutsu",
+    "Author": "tustsutsfutufs",
+    "IsAvailable": true,
+    "YearOfPublish": 1750,
+    "LiteraryGenre": "Old",
+    "Price": 33.0
+  },
+  {
+    "Id": 6,
+    "Name": "1984",
+    "Author": "George Orwell",
+    "IsAvailable": false,
+    "YearOfPublish": 1990,
+    "LiteraryGenre": "Dystopian",
+    "Price": 11.0
   }
 ]

@@ -1,0 +1,101 @@
+﻿@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Library Reports";
+}
+
+<h2>Library Reports</h2>
+
+<div class="row">
+    <!-- Chart for Book Distribution by Author -->
+    <div class="col-md-6">
+        <h4>Book Distribution by Author</h4>
+        <canvas id="authorChart"></canvas>
+    </div>
+
+    <!-- Chart for Genre Distribution -->
+    <div class="col-md-6">
+        <h4>Genre Distribution</h4>
+        <canvas id="genreChart"></canvas>
+    </div>
+
+    <!-- Chart for Price Range Distribution -->
+    <div class="col-md-12 mt-4">
+        <h4>Price Range Distribution</h4>
+        <canvas id="priceChart"></canvas>
+    </div>
+</div>
+
+<!-- Include Chart.js library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Chart Scripts -->
+<script>
+    // Chart for Book Distribution by Author
+    var authorCtx = document.getElementById('authorChart').getContext('2d');
+    var authorChart = new Chart(authorCtx, {
+        type: 'pie',
+        data: {
+            labels: @Html.Raw(JsonConvert.SerializeObject(ViewBag.AuthorLabels)),
+            datasets: [{
+                data: @Html.Raw(JsonConvert.SerializeObject(ViewBag.AuthorData)),
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // Chart for Genre Distribution
+    var genreCtx = document.getElementById('genreChart').getContext('2d');
+    var genreChart = new Chart(genreCtx, {
+        type: 'doughnut',
+        data: {
+            labels: @Html.Raw(JsonConvert.SerializeObject(ViewBag.GenreLabels)),
+            datasets: [{
+                data: @Html.Raw(JsonConvert.SerializeObject(ViewBag.GenreData)),
+                backgroundColor: ['#F96332', '#18CE0F', '#2CA8FF', '#FFB236', '#FF3636']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // Chart for Price Range Distribution
+    var priceCtx = document.getElementById('priceChart').getContext('2d');
+    var priceChart = new Chart(priceCtx, {
+        type: 'bar',
+        data: {
+            labels: @Html.Raw(JsonConvert.SerializeObject(ViewBag.PriceLabels)),
+            datasets: [{
+                label: 'Number of Books',
+                data: @Html.Raw(JsonConvert.SerializeObject(ViewBag.PriceData)),
+                backgroundColor: '#36A2EB'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+</script>
