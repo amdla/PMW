@@ -18,4 +18,7 @@ public class Book
 
     [Required]
     public string LiteraryGenre { get; set; }
+    
+    [Required]
+    public float Price { get; set; }
 }

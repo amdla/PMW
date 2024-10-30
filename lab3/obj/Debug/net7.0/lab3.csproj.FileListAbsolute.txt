@@ -58,9 +58,10 @@ C:\Users\macie\RiderProjects\PMW\lab3\obj\Debug\net7.0\staticwebassets.developme
 C:\Users\macie\RiderProjects\PMW\lab3\obj\Debug\net7.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\macie\RiderProjects\PMW\lab3\obj\Debug\net7.0\scopedcss\bundle\lab3.styles.css
 C:\Users\macie\RiderProjects\PMW\lab3\obj\Debug\net7.0\scopedcss\projectbundle\lab3.bundle.scp.css
-C:\Users\macie\RiderProjects\PMW\lab3\obj\Debug\net7.0\lab3.csproj.CopyComplete
 C:\Users\macie\RiderProjects\PMW\lab3\obj\Debug\net7.0\lab3.dll
 C:\Users\macie\RiderProjects\PMW\lab3\obj\Debug\net7.0\refint\lab3.dll
 C:\Users\macie\RiderProjects\PMW\lab3\obj\Debug\net7.0\lab3.pdb
 C:\Users\macie\RiderProjects\PMW\lab3\obj\Debug\net7.0\lab3.genruntimeconfig.cache
 C:\Users\macie\RiderProjects\PMW\lab3\obj\Debug\net7.0\ref\lab3.dll
+C:\Users\macie\RiderProjects\PMW\lab3\obj\Debug\net7.0\lab3.sourcelink.json
+C:\Users\macie\RiderProjects\PMW\lab3\obj\Debug\net7.0\lab3.csproj.Up2Date

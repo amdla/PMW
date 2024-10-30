@@ -1,10 +1,29 @@
 [
   {
     "Id": 2,
-    "Name": "198",
+    "Name": "1984",
     "Author": "George Orwell",
     "IsAvailable": false,
     "YearOfPublish": 1949,
-    "LiteraryGenre": "Dystopian"
+    "LiteraryGenre": "Dystopian",
+    "Price": 2137.0
+  },
+  {
+    "Id": 3,
+    "Name": "ytosdiystodi",
+    "Author": "srtyisiry",
+    "IsAvailable": false,
+    "YearOfPublish": 2004,
+    "LiteraryGenre": "SFS",
+    "Price": 999.0
+  },
+  {
+    "Id": 4,
+    "Name": "tuazufhkz",
+    "Author": "dturza",
+    "IsAvailable": true,
+    "YearOfPublish": 2000,
+    "LiteraryGenre": "SF",
+    "Price": 15331.0
   }
 ]
