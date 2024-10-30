@@ -10,13 +10,19 @@
     <div class="form-group mr-2 mb-2">
         <input type="text" name="searchQuery" placeholder="Search by Name or ID" class="form-control"/>
     </div>
+
+    <!-- Dynamic Author Filter -->
     <div class="form-group mr-2 mb-2">
         <select name="authorFilter" class="form-control">
             <option value="">Select Author</option>
-            <option value="Author1">Author1</option>
-            <option value="Author2">Author2</option>
+            @foreach (var author in ViewBag.Authors)
+            {
+                <option value="@author">@author</option>
+            }
         </select>
     </div>
+
+    <!-- Static Availability Filter -->
     <div class="form-group mr-2 mb-2">
         <select name="availabilityFilter" class="form-control">
             <option value="">Select Availability</option>
@@ -24,40 +30,29 @@
             <option value="false">Not Available</option>
         </select>
     </div>
+
+    <!-- Dynamic Year Filter -->
     <div class="form-group mr-2 mb-2">
-        <input type="number" name="yearFilter" placeholder="Year" class="form-control"/>
+        <select name="yearFilter" class="form-control">
+            <option value="">Select Year</option>
+            @foreach (var year in ViewBag.Years)
+            {
+                <option value="@year">@year</option>
+            }
+        </select>
     </div>
+
+    <!-- Dynamic Genre Filter -->
     <div class="form-group mr-2 mb-2">
         <select name="genreFilter" class="form-control">
             <option value="">Select Genre</option>
-            <option value="Genre1">Genre1</option>
-            <option value="Genre2">Genre2</option>
+            @foreach (var genre in ViewBag.Genres)
+            {
+                <option value="@genre">@genre</option>
+            }
         </select>
     </div>
-    <div class="form-group mr-2 mb-2">
-        <select name="priceFilter" class="form-control">
-            <option value="">Select Price</option>
-            <option value="Price1">Price1</option>
-            <option value="Price2">Price2</option>
-        </select>
-    </div>
-    <div class="form-group mr-2 mb-2">
-        <select name="sortOrder" class="form-control mr-2">
-            <option value="">Sort By</option>
-            <option value="name_asc">Name Ascending</option>
-            <option value="name_desc">Name Descending</option>
-            <option value="author_asc">Author Ascending</option>
-            <option value="author_desc">Author Descending</option>
-            <option value="availability_asc">Availability Ascending</option>
-            <option value="availability_desc">Availability Descending</option>
-            <option value="year_asc">Year Ascending</option>
-            <option value="year_desc">Year Descending</option>
-            <option value="genre_asc">Genre Ascending</option>
-            <option value="genre_desc">Genre Descending</option>
-            <option value="price_asc">Price Ascending</option>
-            <option value="price_desc">Price Descending</option>
-        </select>
-    </div>
+    
     <button type="submit" class="btn btn-primary mb-2">Apply Filters</button>
 </form>
 
