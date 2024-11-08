@@ -114,7 +114,7 @@ namespace lab3.Controllers
             return View(book);
         }
 
-        // Action for viewing the edit form
+        // GET: Action for viewing the edit form
         public IActionResult Edit(int id)
         {
             var books = ReadJsonFile();
@@ -127,7 +127,7 @@ namespace lab3.Controllers
             return View(book);
         }
 
-        // Action to edit an existing book
+        // POST: Action to edit an existing book
         [HttpPost]
         public IActionResult Edit(Book book)
         {
