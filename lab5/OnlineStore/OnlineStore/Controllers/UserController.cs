@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OnlineStore.Data;
 using OnlineStore.Models;
 
 namespace OnlineStore.Controllers;
