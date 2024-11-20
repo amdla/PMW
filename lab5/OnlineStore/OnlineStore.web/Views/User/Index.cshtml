@@ -1,0 +1,23 @@
+﻿@model IEnumerable<OnlineStore.Models.User>
+
+<h1>Users</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Address</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>@user.Name</td>
+            <td>@user.Address?.Street, @user.Address?.City</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<a asp-controller="User" asp-action="Create">Create New User</a>

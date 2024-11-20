@@ -1,0 +1,23 @@
+﻿@model OnlineStore.Models.OrderProduct
+
+@{
+Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create Order Product</h1>
+
+<form asp-action="Create" method="post">
+    <div>
+        <label>Order</label>
+        <select asp-for="OrderId" asp-items="@(new SelectList(ViewBag.Orders, "Id", "OrderDate"))">
+            <option value="">--Select Order--</option>
+        </select>
+    </div>
+    <div>
+        <label>Product</label>
+        <select asp-for="ProductId" asp-items="@(new SelectList(ViewBag.Products, "Id", "Name"))">
+            <option value="">--Select Product--</option>
+        </select>
+    </div>
+    <button type="submit">Create</button>
+</form>

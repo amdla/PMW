@@ -4,7 +4,7 @@ using OnlineStore.Models;
 
 namespace OnlineStore.Web.Controllers;
 
-public class ProductsController(AppDbContext context) : Controller
+public class ProductController(AppDbContext context) : Controller
 {
     public IActionResult Index()
     {

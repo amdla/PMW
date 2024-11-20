@@ -1,0 +1,19 @@
+﻿@model OnlineStore.Models.Address
+
+@{
+Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create Address</h1>
+
+<form asp-action="Create" method="post">
+    <div>
+        <label>Street</label>
+        <input asp-for="Street"/>
+    </div>
+    <div>
+        <label>City</label>
+        <input asp-for="City"/>
+    </div>
+    <button type="submit">Create</button>
+</form>

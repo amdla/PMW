@@ -1,0 +1,25 @@
+﻿@model IEnumerable<OnlineStore.Models.Category>
+
+@{
+Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Categories</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var category in Model)
+    {
+        <tr>
+            <td>@category.Name</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<a asp-controller="Category" asp-action="Create">Create New Category</a>

@@ -11,7 +11,7 @@ using OnlineStore.Data;
 namespace OnlineStore.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241120201146_InitialCreate")]
+    [Migration("20241120214400_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

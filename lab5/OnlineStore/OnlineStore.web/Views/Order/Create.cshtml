@@ -1,0 +1,15 @@
+﻿@model OnlineStore.Models.Order
+
+@{
+Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create Order</h1>
+
+<form asp-action="Create" method="post">
+    <div>
+        <label>Order Date</label>
+        <input asp-for="OrderDate" type="date"/>
+    </div>
+    <button type="submit">Create</button>
+</form>
