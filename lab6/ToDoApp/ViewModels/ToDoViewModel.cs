@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using ToDoApp.Models;
 using ToDoApp.Services;
 
@@ -92,6 +91,7 @@ namespace ToDoApp.ViewModels
             await _toDoService.DeleteItemAsync(item.Id);
             await LoadItemsAsync();
         }
+
 
         private async Task UpdateItemAsync()
         {

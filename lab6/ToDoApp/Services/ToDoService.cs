@@ -1,8 +1,5 @@
 ﻿using SQLite;
 using ToDoApp.Models;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 
 namespace ToDoApp.Services
 {
@@ -21,6 +18,7 @@ namespace ToDoApp.Services
         public ToDoService()
         {
             var databasePath = Path.Combine(FileSystem.AppDataDirectory, "ToDoDatabase.db");
+            // location: \AppData\Local\Packages\com.companyname.todoapp_9zz4h110yvjzm\LocalState
             _database = new SQLiteAsyncConnection(databasePath);
             _database.CreateTableAsync<ToDoItem>().Wait();
         }

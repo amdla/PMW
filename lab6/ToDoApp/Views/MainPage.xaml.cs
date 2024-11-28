@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ToDoApp.ViewModels;
+﻿using ToDoApp.ViewModels;
 
 namespace ToDoApp.Views
 {
@@ -11,9 +6,9 @@ namespace ToDoApp.Views
     {
         public MainPage(ToDoViewModel viewModel)
         {
-            Console.WriteLine("MainPage created with IToDoService from DI.");
             InitializeComponent();
             BindingContext = viewModel;
+            Task.Run(async () => await viewModel.LoadItemsCommand.ExecuteAsync(null));
         }
 
     }
