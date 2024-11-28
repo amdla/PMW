@@ -1,32 +1,30 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ToDoApp.Views.MainPage"
-             xmlns:viewModels="clr-namespace:ToDoApp.ViewModels">
+             xmlns:vm="clr-namespace:ToDoApp.ViewModels"
+             x:Class="ToDoApp.Views.MainPage">
 
+    <ContentPage.BindingContext>
+        <vm:ToDoViewModel />
+    </ContentPage.BindingContext>
 
-    <VerticalStackLayout Padding="10" Spacing="10">
-        <Entry Placeholder="Title"
-               Text="{Binding Title}" />
+    <VerticalStackLayout Padding="20">
+        <Entry Placeholder="Title" Text="{Binding Title}" />
+        <Entry Placeholder="Description" Text="{Binding Description}" />
 
-        <Entry Placeholder="Description"
-               Text="{Binding Description}" />
+        <HorizontalStackLayout>
+            <Button Text="Add" Command="{Binding AddItemCommand}" />
+        </HorizontalStackLayout>
 
-        <Button Text="Add To-Do"
-                Command="{Binding AddItemCommand}" />
-
-        <CollectionView ItemsSource="{Binding Items}">
-            <CollectionView.ItemTemplate>
+        <ListView ItemsSource="{Binding Items}" SelectedItem="{Binding CurrentItem}">
+            <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Frame Margin="5" Padding="10" BorderColor="LightGray">
-                        <VerticalStackLayout>
-                            <Label Text="{Binding Title}" FontAttributes="Bold" />
-                            <Label Text="{Binding Description}" />
-                            <CheckBox IsChecked="{Binding IsCompleted}" />
-                        </VerticalStackLayout>
-                    </Frame>
+                    <TextCell Text="{Binding Title}" Detail="{Binding Description}" />
                 </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Button Text="Delete" Command="{Binding DeleteItemCommand}" CommandParameter="{Binding SelectedItem}" />
     </VerticalStackLayout>
 </ContentPage>

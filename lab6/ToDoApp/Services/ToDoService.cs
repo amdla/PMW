@@ -1,68 +1,48 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using SQLite;
 using ToDoApp.Models;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace ToDoApp.Services
 {
+    public interface IToDoService
+    {
+        Task<List<ToDoItem>> GetItemsAsync();
+        Task AddItemAsync(ToDoItem item);
+        Task UpdateItemAsync(ToDoItem item);
+        Task DeleteItemAsync(int id);
+    }
+
     public class ToDoService : IToDoService
     {
-        private readonly string _filePath;
+        private readonly SQLiteAsyncConnection _database;
 
         public ToDoService()
         {
-            _filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "todoitems.json");
+            var databasePath = Path.Combine(FileSystem.AppDataDirectory, "ToDoDatabase.db");
+            _database = new SQLiteAsyncConnection(databasePath);
+            _database.CreateTableAsync<ToDoItem>().Wait();
         }
 
-        public async Task<List<ToDoItem>> GetItemsAsync()
+        public Task<List<ToDoItem>> GetItemsAsync()
         {
-            if (!File.Exists(_filePath))
-            {
-                return new List<ToDoItem>();
-            }
-
-            var json = await File.ReadAllTextAsync(_filePath);
-            return JsonSerializer.Deserialize<List<ToDoItem>>(json) ?? new List<ToDoItem>();
+            return _database.Table<ToDoItem>().ToListAsync();
         }
 
-        public async Task AddItemAsync(ToDoItem item)
+        public Task AddItemAsync(ToDoItem item)
         {
-            var items = await GetItemsAsync();
-            item.Id = items.Any() ? items.Max(i => i.Id) + 1 : 1;
-            items.Add(item);
-            await SaveItemsAsync(items);
+            return _database.InsertAsync(item);
         }
 
-        public async Task UpdateItemAsync(ToDoItem item)
+        public Task UpdateItemAsync(ToDoItem item)
         {
-            var items = await GetItemsAsync();
-            var existingItem = items.FirstOrDefault(i => i.Id == item.Id);
-            if (existingItem != null)
-            {
-                existingItem.Title = item.Title;
-                existingItem.Description = item.Description;
-                existingItem.IsCompleted = item.IsCompleted;
-            }
-            await SaveItemsAsync(items);
+            return _database.UpdateAsync(item);
         }
 
-        public async Task DeleteItemAsync(int id)
+        public Task DeleteItemAsync(int id)
         {
-            var items = await GetItemsAsync();
-            var item = items.FirstOrDefault(i => i.Id == id);
-            if (item != null)
-            {
-                items.Remove(item);
-            }
-            await SaveItemsAsync(items);
-        }
-
-        private async Task SaveItemsAsync(List<ToDoItem> items)
-        {
-            var json = JsonSerializer.Serialize(items);
-            await File.WriteAllTextAsync(_filePath, json);
+            return _database.DeleteAsync<ToDoItem>(id);
         }
     }
 }

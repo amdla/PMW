@@ -13,20 +13,22 @@ namespace ToDoApp.ViewModels
 
         public ObservableCollection<ToDoItem> Items { get; } = new();
 
-        [ObservableProperty]
-        private string title;
+        [ObservableProperty] private string title;
 
-        [ObservableProperty]
-        private string description;
+        [ObservableProperty] private string description;
 
-        [ObservableProperty]
-        private ToDoItem currentItem;
+        [ObservableProperty] private ToDoItem currentItem;
 
         public IAsyncRelayCommand LoadItemsCommand { get; }
         public IAsyncRelayCommand AddItemCommand { get; }
         public IAsyncRelayCommand<ToDoItem> DeleteItemCommand { get; }
         public IAsyncRelayCommand UpdateItemCommand { get; }
         public RelayCommand<ToDoItem> StartUpdateCommand { get; }
+
+        public ToDoViewModel() // Domyślny konstruktor (dla XAML)
+        {
+            _toDoService = null!;
+        }
 
         public ToDoViewModel(IToDoService toDoService)
         {
