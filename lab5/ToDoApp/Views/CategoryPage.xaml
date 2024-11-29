@@ -1,0 +1,36 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ToDoApp.ViewModels"
+             x:Class="ToDoApp.Views.CategoryPage"
+             Title="Categories">
+
+    <VerticalStackLayout Padding="10">
+        <Label Text="Lista kategorii" FontSize="24" HorizontalOptions="Center" />
+
+        <!-- Lista kategorii -->
+        <CollectionView ItemsSource="{Binding Categories}"
+                        SelectionMode="Single">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <VerticalStackLayout Padding="10">
+                        <Label Text="{Binding Name}" FontSize="20" />
+                        <HorizontalStackLayout>
+                            <Button Text="Edytuj"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CategoryViewModel}}, Path=EditCategoryCommand}"
+                                    CommandParameter="{Binding .}" />
+                            <Button Text="Usuń"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CategoryViewModel}}, Path=DeleteCategoryCommand}"
+                                    CommandParameter="{Binding .}" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Formularz -->
+        <Entry Placeholder="Nazwa kategorii" Text="{Binding CategoryName}" />
+        <Button
+            Text="{Binding IsEditing, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Dodaj,Zapisz zmiany'}"
+            Command="{Binding SaveCategoryCommand}" />
+    </VerticalStackLayout>
+</ContentPage>

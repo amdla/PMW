@@ -1,0 +1,38 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ToDoApp.ViewModels"
+             x:Class="ToDoApp.Views.UserPage"
+             Title="Users">
+
+    <VerticalStackLayout Padding="10">
+        <Label Text="Lista użytkowników" FontSize="24" HorizontalOptions="Center" />
+
+        <!-- Lista użytkowników -->
+        <CollectionView ItemsSource="{Binding Users}"
+                        SelectionMode="Single">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <VerticalStackLayout Padding="10">
+                        <Label Text="{Binding Name}" FontSize="20" />
+                        <Label Text="{Binding Email}" FontSize="16" />
+                        <HorizontalStackLayout>
+                            <Button Text="Edytuj"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:UserViewModel}}, Path=EditUserCommand}"
+                                    CommandParameter="{Binding .}" />
+                            <Button Text="Usuń"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:UserViewModel}}, Path=DeleteUserCommand}"
+                                    CommandParameter="{Binding .}" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Formularz -->
+        <Entry Placeholder="Imię" Text="{Binding UserName}" />
+        <Entry Placeholder="Email" Text="{Binding UserEmail}" />
+        <Button
+            Text="{Binding IsEditing, Converter={StaticResource BoolToTextConverter}, ConverterParameter='Dodaj,Zapisz zmiany'}"
+            Command="{Binding SaveUserCommand}" />
+    </VerticalStackLayout>
+</ContentPage>

@@ -1,68 +1,169 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using ToDoApp.Data;
 using ToDoApp.Models;
 
 namespace ToDoApp.Services
 {
+    public interface IToDoService
+    {
+        // ToDoItem CRUD
+        Task<List<ToDoItem>> GetItemsAsync();
+        Task AddItemAsync(ToDoItem item);
+        Task UpdateItemAsync(ToDoItem item);
+        Task DeleteItemAsync(int id);
+
+        // Category CRUD
+        Task<List<Category>> GetCategoriesAsync();
+        Task AddCategoryAsync(Category category);
+        Task DeleteCategoryAsync(int id);
+        Task UpdateCategoryAsync(Category category);
+
+        // ToDoItemCategory (Relationship)
+        Task<List<ToDoItemCategory>> GetToDoItemCategoriesAsync();
+        Task AddToDoItemCategoryAsync(ToDoItemCategory toDoItemCategory);
+        Task DeleteToDoItemCategoryAsync(int id);
+
+        // User CRUD
+        Task<List<User>> GetUsersAsync();
+        Task AddUserAsync(User user);
+        Task DeleteUserAsync(int id);
+        Task UpdateUserAsync(User user);
+    }
+
     public class ToDoService : IToDoService
     {
-        private readonly string _filePath;
+        private readonly ToDoDbContext _dbContext;
 
-        public ToDoService()
+        public ToDoService(ToDoDbContext dbContext)
         {
-            _filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "todoitems.json");
+            _dbContext = dbContext;
         }
 
+        // ToDoItem CRUD
         public async Task<List<ToDoItem>> GetItemsAsync()
         {
-            if (!File.Exists(_filePath))
-            {
-                return new List<ToDoItem>();
-            }
-
-            var json = await File.ReadAllTextAsync(_filePath);
-            return JsonSerializer.Deserialize<List<ToDoItem>>(json) ?? new List<ToDoItem>();
+            return await _dbContext.ToDoItems
+                .Include(i => i.User)
+                .Include(i => i.ToDoItemCategories)
+                .ThenInclude(ic => ic.Category)
+                .ToListAsync();
         }
 
         public async Task AddItemAsync(ToDoItem item)
         {
-            var items = await GetItemsAsync();
-            item.Id = items.Any() ? items.Max(i => i.Id) + 1 : 1;
-            items.Add(item);
-            await SaveItemsAsync(items);
+            _dbContext.ToDoItems.Add(item);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task UpdateItemAsync(ToDoItem item)
         {
-            var items = await GetItemsAsync();
-            var existingItem = items.FirstOrDefault(i => i.Id == item.Id);
-            if (existingItem != null)
-            {
-                existingItem.Title = item.Title;
-                existingItem.Description = item.Description;
-                existingItem.IsCompleted = item.IsCompleted;
-            }
-            await SaveItemsAsync(items);
+            _dbContext.ToDoItems.Update(item);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task DeleteItemAsync(int id)
         {
-            var items = await GetItemsAsync();
-            var item = items.FirstOrDefault(i => i.Id == id);
+            var item = await _dbContext.ToDoItems.FindAsync(id);
             if (item != null)
             {
-                items.Remove(item);
+                _dbContext.ToDoItems.Remove(item);
+                await _dbContext.SaveChangesAsync();
             }
-            await SaveItemsAsync(items);
         }
 
-        private async Task SaveItemsAsync(List<ToDoItem> items)
+        // Category CRUD
+        public async Task<List<Category>> GetCategoriesAsync()
         {
-            var json = JsonSerializer.Serialize(items);
-            await File.WriteAllTextAsync(_filePath, json);
+            return await _dbContext.Categories
+                .Include(c => c.ToDoItemCategories)
+                .ThenInclude(ic => ic.ToDoItem)
+                .ToListAsync();
+        }
+
+        public async Task AddCategoryAsync(Category category)
+        {
+            _dbContext.Categories.Add(category);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteCategoryAsync(int id)
+        {
+            var category = await _dbContext.Categories.FindAsync(id);
+            if (category != null)
+            {
+                _dbContext.Categories.Remove(category);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+
+        // User CRUD
+        public async Task<List<User>> GetUsersAsync()
+        {
+            return await _dbContext.Users
+                .Include(u => u.ToDoItems)
+                .ToListAsync();
+        }
+
+        public async Task AddUserAsync(User user)
+        {
+            _dbContext.Users.Add(user);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteUserAsync(int id)
+        {
+            var user = await _dbContext.Users.FindAsync(id);
+            if (user != null)
+            {
+                _dbContext.Users.Remove(user);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+
+        // Relationship (ToDoItemCategory)
+        public async Task<List<ToDoItemCategory>> GetToDoItemCategoriesAsync()
+        {
+            return await _dbContext.ToDoItemCategories
+                .Include(ic => ic.ToDoItem)
+                .Include(ic => ic.Category)
+                .ToListAsync();
+        }
+
+        public async Task AddToDoItemCategoryAsync(ToDoItemCategory toDoItemCategory)
+        {
+            _dbContext.ToDoItemCategories.Add(toDoItemCategory);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteToDoItemCategoryAsync(int id)
+        {
+            var toDoItemCategory = await _dbContext.ToDoItemCategories.FindAsync(id);
+            if (toDoItemCategory != null)
+            {
+                _dbContext.ToDoItemCategories.Remove(toDoItemCategory);
+                await _dbContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpdateUserAsync(User user)
+        {
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
+            _dbContext.Users.Update(user);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task UpdateCategoryAsync(Category category)
+        {
+            if (category == null) throw new ArgumentNullException(nameof(category));
+
+            _dbContext.Categories.Update(category);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
