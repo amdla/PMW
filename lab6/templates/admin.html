@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administratora</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Panel Administratora</h1>
+        <h2>Lista zgłoszeń</h2>
+
+        <!-- Formularz edytowania zgłoszenia (tylko status i komentarz do edytowania) -->
+        <div id="edit-ticket-form" style="display: none;">
+            <h3>Edytuj zgłoszenie</h3>
+            <form id="ticket-form">
+                <!-- Wyświetlanie opisu, ale bez możliwości edytowania -->
+                <label for="edit-description">Opis:</label><br>
+                <input type="text" id="edit-description" name="description" disabled><br>
+
+                <!-- Wyświetlanie priorytetu, ale bez możliwości edytowania -->
+                <label for="edit-priority">Priorytet:</label><br>
+                <input type="text" id="edit-priority" name="priority" disabled><br>
+
+                <!-- Edytowalne pole dla statusu -->
+                <label for="edit-status">Status:</label><br>
+                <select id="edit-status" name="status">
+                    <option value="Nowe">Nowe</option>
+                    <option value="W trakcie">W trakcie</option>
+                    <option value="Zakończone">Zakończone</option>
+                </select><br>
+
+                <!-- Edytowalne pole dla komentarzy -->
+                <label for="edit-comments">Komentarze:</label><br>
+                <textarea id="edit-comments" name="comments" required></textarea><br>
+
+                <button type="submit" class="btn">Zapisz zmiany</button>
+            </form>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Opis</th>
+                    <th>Status</th>
+                    <th>Priorytet</th>
+                    <th>Data utworzenia</th>
+                    <th>Data aktualizacji</th>
+                    <th>Komentarze</th>
+                    <th>Akcje</th>
+                </tr>
+            </thead>
+            <tbody id="tickets-table">
+                <!-- Lista zgłoszeń -->
+            </tbody>
+        </table>
+
+        <a href="/" class="btn back-btn">Wróć na stronę główną</a>
+    </div>
+
+    <script>
+
+    const socket = io.connect(window.location.origin);
+
+    socket.on('connect', function() {
+        console.log('Connected to WebSocket server!');
+    });
+    socket.on('new_ticket', function(data) {
+        if (data.id) {
+            fetchTickets();
+        } else if (data.error) {
+            alert('Błąd: ' + data.error);
+        }
+    });
+
+    // Listen for ticket updates from the server
+    socket.on('ticket_update', function(data) {
+        console.log(data)
+        const rows = document.querySelectorAll('tr');
+    console.log(rows);  // See if rows are populated before you try to update
+        if (data.id) {
+            // Find the row corresponding to the updated ticket
+            const row = document.querySelector(`#ticket-${data.id}`);
+            console.log(row);  // Check if it's null or undefined
+            if (row) {
+                // Update the row with new ticket data
+                row.innerHTML = `
+                    <td>${data.id}</td>
+                    <td>${data.description}</td>
+                    <td>${data.status}</td>
+                    <td>${data.priority}</td>
+                    <td>${data.created_at}</td>
+                    <td>${data.updated_at}</td>
+                    <td>${data.comments || 'Brak'}</td>
+                    <td><button class="btn edit-btn" data-id="${data.id}">Edytuj</button></td>
+                `;
+            }
+        } else if (data.error) {
+            alert('Błąd: ' + data.error);
+        }
+    });
+
+    // Funkcja do pobierania zgłoszeń z API
+    async function fetchTickets() {
+        const response = await fetch('/api/tickets');
+        const tickets = await response.json();
+        const tableBody = document.getElementById('tickets-table');
+        tableBody.innerHTML = ''; // Czyści tabelę
+        tickets.forEach(ticket => addTicketToTable(ticket));
+    }
+
+    // Funkcja do dodawania zgłoszenia do tabeli
+    function addTicketToTable(ticket) {
+        const tableBody = document.getElementById('tickets-table');
+        const row = document.createElement('tr');
+        row.id = `ticket-${ticket.id}`;  // Assign unique id to the row
+        row.innerHTML = `
+            <td>${ticket.id}</td>
+            <td>${ticket.description}</td>
+            <td>${ticket.status}</td>
+            <td>${ticket.priority}</td>
+            <td>${new Date(ticket.created_at).toLocaleString()}</td>
+            <td>${new Date(ticket.updated_at).toLocaleString()}</td>
+            <td>${ticket.comments || 'Brak'}</td>
+            <td><button class="btn edit-btn" data-id="${ticket.id}">Edytuj</button></td>
+        `;
+        tableBody.appendChild(row);
+    }
+
+    // Funkcja do wypełnienia formularza danymi zgłoszenia
+    function fillEditForm(ticket) {
+        document.getElementById('edit-description').value = ticket.description;
+        document.getElementById('edit-priority').value = ticket.priority;
+        document.getElementById('edit-status').value = ticket.status;
+        document.getElementById('edit-comments').value = ticket.comments || '';
+
+        // Zapisz ID zgłoszenia w formularzu
+        document.getElementById('ticket-form').setAttribute('data-id', ticket.id);
+
+        // Pokaż formularz edytowania
+        document.getElementById('edit-ticket-form').style.display = 'block';
+    }
+
+    // Funkcja do zapisania edytowanych danych
+    async function saveTicketChanges(ticketId, updatedFields) {
+        socket.emit('new_update', {
+            id: ticketId,
+            status: updatedFields.status,
+            comments: updatedFields.comments
+        });
+        const response = await fetch(`/api/tickets/${ticketId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedFields)
+        });
+
+        if (response.ok) {
+
+            fetchTickets(); // Ponownie ładujemy zgłoszenia
+            document.getElementById('edit-ticket-form').style.display = 'none'; // Ukryj formularz
+        } else {
+            const error = await response.json();
+        }
+    }
+
+    // Obsługa kliknięcia w przycisk "Edytuj"
+    document.getElementById('tickets-table').addEventListener('click', (e) => {
+        if (e.target.classList.contains('edit-btn')) {
+            const ticketId = e.target.getAttribute('data-id');
+            const response = fetch(`/api/tickets/${ticketId}`);
+            response.then(res => res.json())
+                .then(ticket => {
+                    fillEditForm(ticket);
+                });
+        }
+    });
+
+    // Obsługa wysyłania formularza edytowania
+    document.getElementById('ticket-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const ticketId = document.getElementById('ticket-form').getAttribute('data-id');
+        const updatedFields = {
+            status: document.getElementById('edit-status').value,
+            comments: document.getElementById('edit-comments').value,
+        };
+
+        saveTicketChanges(ticketId, updatedFields);
+    });
+
+    // Ładowanie zgłoszeń po załadowaniu strony
+    fetchTickets();
+    </script>
+</body>
+</html>

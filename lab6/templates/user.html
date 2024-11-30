@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Użytkownika</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Panel Użytkownika</h1>
+        <button id="new-ticket-btn" class="btn">Dodaj nowe zgłoszenie</button>
+        <h2>Lista zgłoszeń</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Opis</th>
+                    <th>Status</th>
+                    <th>Priorytet</th>
+                    <th>Data utworzenia</th>
+                    <th>Data aktualizacji</th>
+                    <th>Komentarze</th>
+                </tr>
+            </thead>
+            <tbody id="tickets-table">
+                <!-- Lista zgłoszeń -->
+            </tbody>
+        </table>
+
+        <!-- Formularz dodawania zgłoszenia -->
+        <div id="new-ticket-form" style="display: none;">
+            <h2>Dodaj nowe zgłoszenie</h2>
+            <form id="ticket-form">
+                <label for="description">Opis:</label><br>
+                <textarea id="description" name="description" required></textarea><br>
+                <label for="priority">Priorytet (1-5):</label><br>
+                <input type="number" id="priority" name="priority" min="1" max="5" required><br>
+                <button type="submit" class="btn">Dodaj zgłoszenie</button>
+            </form>
+        </div>
+        <a href="/" class="btn back-btn">Wróć na stronę główną</a>
+    </div>
+
+    <script>
+
+        const socket = io.connect(window.location.origin);
+
+        socket.on('connect', function() {
+            console.log('Connected to WebSocket server!');
+        });
+        socket.on('new_ticket', function(data) {
+            if (data.id) {
+                fetchTickets();
+            } else if (data.error) {
+                alert('Błąd: ' + data.error);
+            }
+        });
+
+        socket.on('ticket_update', function(data) {
+            console.log("Ticket update received:", data);
+            // Find the row that corresponds to the updated ticket
+            const row = document.querySelector(`#ticket-${data.id}`);
+            if (row) {
+                // Update the row with the new ticket data
+                row.innerHTML = `
+                    <td>${data.id}</td>
+                    <td>${data.description}</td>
+                    <td>${data.status}</td>
+                    <td>${data.priority}</td>
+                    <td>${new Date(data.created_at).toLocaleString()}</td>
+                    <td>${new Date(data.updated_at).toLocaleString()}</td>
+                    <td>${data.comments || 'Brak'}</td>
+                `;
+                console.log("Updating ticket: ", data.id);  // Dodajmy logowanie, żeby sprawdzić, czy dochodzimy tutaj
+                alert(`Zaktualizowano zgłoszenie nr ${data.id}`);
+            }
+        });
+
+        // Optionally handle the disconnection event
+        socket.on('disconnect', function() {
+            console.log('Disconnected from WebSocket server!');
+        });
+
+        // Obsługa przycisku wyświetlającego formularz
+        document.getElementById('new-ticket-btn').addEventListener('click', () => {
+            document.getElementById('new-ticket-form').style.display = 'block';
+        });
+
+        // Obsługa dodawania zgłoszenia
+        document.getElementById('ticket-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const description = document.getElementById('description').value;
+            const priority = document.getElementById('priority').value;
+
+            const ticketData = {
+                description: description,
+                priority: parseInt(priority), // Zamieniamy priorytet na liczbę
+                comments: 'Brak' // Użytkownik nie dodaje komentarzy
+            };
+
+            socket.emit('new_ticket', ticketData);
+
+            try {
+                const response = await fetch('/api/tickets', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(ticketData)
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    alert('Błąd: ' + error.error);
+                    return;
+                }
+
+                const newTicket = await response.json();
+
+
+                // Przeładuj tabelę zgłoszeń
+                fetchTickets();
+
+                // Ukryj formularz
+                document.getElementById('new-ticket-form').style.display = 'none';
+                document.getElementById('ticket-form').reset();
+
+            } catch (error) {
+                console.error('Wystąpił błąd:', error);
+            }
+        });
+
+        // Funkcja do pobierania zgłoszeń
+        async function fetchTickets() {
+            const response = await fetch('/api/tickets');
+            const tickets = await response.json();
+            const tableBody = document.getElementById('tickets-table');
+            tableBody.innerHTML = ''; // Czyści tabelę
+            tickets.forEach(ticket => addTicketToTable(ticket));
+        }
+
+        // Funkcja do dodawania zgłoszenia do tabeli
+        function addTicketToTable(ticket) {
+            const tableBody = document.getElementById('tickets-table');
+            const row = document.createElement('tr');
+            row.id = `ticket-${ticket.id}`;  // Assign unique ID to the row
+            row.innerHTML = `
+                <td>${ticket.id}</td>
+                <td>${ticket.description}</td>
+                <td>${ticket.status}</td>
+                <td>${ticket.priority}</td>
+                <td>${ticket.created_at}</td>
+                <td>${ticket.updated_at}</td>
+                <td>${ticket.comments || 'Brak'}</td>
+            `;
+            tableBody.appendChild(row);
+        }
+
+        // Ładowanie zgłoszeń po załadowaniu strony
+        fetchTickets();
+    </script>
+</body>
+</html>
