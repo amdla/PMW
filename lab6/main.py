@@ -1,8 +1,8 @@
-import sio as sio
-from flask import Flask, jsonify, request, render_template
-from flask_sqlalchemy import SQLAlchemy
-from flask_socketio import join_room, leave_room, send, SocketIO
 from datetime import datetime
+
+from flask import Flask, jsonify, request, render_template
+from flask_socketio import SocketIO
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "asdad"
@@ -12,6 +12,7 @@ db = SQLAlchemy(app)
 
 socketio = SocketIO(app)
 
+
 # WebSocket event to handle new connections
 @socketio.on('connect')
 def handle_connect():
@@ -19,10 +20,12 @@ def handle_connect():
     # Optional: Send a message to the client on connection
     # send("Welcome to the server!")
 
+
 # WebSocket event to handle disconnections
 @socketio.on('disconnect')
 def handle_disconnect():
     print("A user has disconnected.")
+
 
 @socketio.on('new_ticket')
 def handle_new_ticket(data):
@@ -50,6 +53,7 @@ def handle_new_ticket(data):
         'updated_at': new_ticket.updated_at.strftime('%Y-%m-%d %H:%M:%S')
     }, include_self=False)
 
+
 @socketio.on('new_update')
 def handle_ticket_update(data):
     ticket_id = data.get('id')
@@ -63,7 +67,7 @@ def handle_ticket_update(data):
 
         ticket.status = status
         ticket.comments = comments
-        ticket.updated_at = datetime.utcnow()
+        ticket.updated_at = datetime.now()
         db.session.commit()
         socketio.emit('ticket_update', {
             'id': ticket.id,
@@ -75,34 +79,40 @@ def handle_ticket_update(data):
             'updated_at': ticket.updated_at.strftime('%Y-%m-%d %H:%M:%S')
         }, include_self=False)
 
+
 # Model bazy danych
 class Ticket(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(500), nullable=False)
     priority = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(20), default="Nowe")
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.now)
     comments = db.Column(db.String(500), default="Brak")
+
 
 # Inicjalizacja bazy danych
 with app.app_context():
     db.create_all()
+
 
 # Strona główna
 @app.route('/')
 def index():
     return render_template('index.html')
 
+
 # Strona użytkownika
 @app.route('/user')
 def user():
     return render_template('user.html')
 
+
 # Strona administratora
 @app.route('/admin')
 def admin():
     return render_template('admin.html')
+
 
 # API do dodawania zgłoszenia (POST)
 @app.route('/api/tickets', methods=['POST'])
@@ -128,6 +138,7 @@ def add_ticket():
         'comments': new_ticket.comments,
     }), 201
 
+
 # API do pobierania zgłoszeń
 @app.route('/api/tickets', methods=['GET'])
 def get_tickets():
@@ -143,6 +154,7 @@ def get_tickets():
     } for ticket in tickets]
     return jsonify(tickets_data)
 
+
 # API do pobierania pojedynczego zgłoszenia
 @app.route('/api/tickets/<int:ticket_id>', methods=['GET'])
 def get_ticket(ticket_id):
@@ -157,6 +169,7 @@ def get_ticket(ticket_id):
         'comments': ticket.comments
     })
 
+
 # API do aktualizacji zgłoszenia
 @app.route('/api/tickets/<int:ticket_id>', methods=['PUT'])
 def update_ticket(ticket_id):
@@ -165,11 +178,12 @@ def update_ticket(ticket_id):
 
     ticket.status = data['status']
     ticket.comments = data['comments']
-    ticket.updated_at = datetime.utcnow()
+    ticket.updated_at = datetime.now()
 
     db.session.commit()
 
     return jsonify({'message': 'Zgłoszenie zostało zaktualizowane.'})
 
+
 if __name__ == "__main__":
-    socketio.run(app, debug=True)
+    socketio.run(app, debug=True, use_reloader=True, allow_unsafe_werkzeug=True, log_output=True)
