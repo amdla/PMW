@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TodoApi.Controllers
 {
-    using TodoApi.DTO;
-    using TodoApi.Models;
+    using DTO;
+    using Models;
 
     [ApiController]
     [Route("api/[controller]")]

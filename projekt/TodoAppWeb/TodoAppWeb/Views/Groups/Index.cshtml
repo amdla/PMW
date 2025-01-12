@@ -1,0 +1,11 @@
+﻿@model List<GroupModel>
+
+<h1>Groups</h1>
+<a href="/Groups/Create">Add Group</a>
+
+<ul>
+    @foreach (var group in Model)
+    {
+        <li>@group.Name (<a href="/Groups/Delete/@group.GroupId">Delete</a>)</li>
+    }
+</ul>
