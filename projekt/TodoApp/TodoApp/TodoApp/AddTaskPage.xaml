@@ -1,0 +1,23 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="TodoApp.AddTaskPage"
+             Title="Add Task"
+             BackgroundColor="#F5F5F5">
+
+    <StackLayout Padding="10" VerticalOptions="Start">
+        <!-- Entry for Task Title -->
+        <Entry x:Name="TaskTitleEntry" 
+               Placeholder="Task Title" 
+               Margin="0,0,0,10" />
+
+        <!-- Entry for Task Description -->
+        <Entry x:Name="TaskDescriptionEntry" 
+               Placeholder="Task Description" 
+               Margin="0,0,0,10" />
+
+        <!-- Button to Save Task -->
+        <Button Text="Save Task" 
+                Clicked="OnSaveTaskClicked"
+                HorizontalOptions="FillAndExpand" />
+    </StackLayout>
+</ContentPage>
