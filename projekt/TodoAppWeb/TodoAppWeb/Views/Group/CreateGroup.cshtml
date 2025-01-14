@@ -1,0 +1,12 @@
+﻿@model TodoAppWeb.Models.Group
+
+<h1>Add Group</h1>
+
+<form asp-action="Create" asp-controller="Group" method="post">
+    <div class="form-group">
+        <label for="groupName">Group Name</label>
+        <input type="text" id="groupName" name="groupName" class="form-control"/>
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>

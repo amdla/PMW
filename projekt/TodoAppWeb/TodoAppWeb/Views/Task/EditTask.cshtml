@@ -1,0 +1,13 @@
+﻿@model TodoAppWeb.Models.TodoTask
+
+<h1>Edit Task</h1>
+
+<form asp-action="Edit" asp-controller="Task" method="post" class="form-container">
+    <label for="Title">Title</label>
+    <input type="text" name="Title" value="@Model.Title" required class="form-input" />
+
+    <label for="Description">Description</label>
+    <textarea name="Description" class="form-textarea">@Model.Description</textarea>
+
+    <button type="submit" class="button">Save</button>
+</form>

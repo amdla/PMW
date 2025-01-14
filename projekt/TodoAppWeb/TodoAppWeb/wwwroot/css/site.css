@@ -1,0 +1,334 @@
+/* styles.css */
+
+/* General Styles */
+body {
+  background-color: var(--white);
+  color: var(--black);
+  font-family: 'OpenSansRegular', sans-serif;
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
+}
+
+/* ActivityIndicator */
+.activity-indicator {
+  color: var(--primary);
+}
+
+/* IndicatorView */
+.indicator-view {
+  --indicator-color: var(--gray200);
+  --selected-indicator-color: var(--gray950);
+}
+
+/* Border */
+.border {
+  border-color: var(--gray200);
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 8px;
+}
+
+/* BoxView */
+.box-view {
+  background-color: var(--gray950);
+}
+
+/* Button */
+.button {
+  background-color: var(--primary);
+  color: var(--white);
+  font-family: 'OpenSansRegular', sans-serif;
+  font-size: 14px;
+  border-radius: 8px;
+  padding: 14px 10px;
+  min-height: 44px;
+  min-width: 44px;
+  border: none;
+}
+
+.button:disabled {
+  background-color: var(--gray200);
+  color: var(--gray950);
+}
+
+/* CheckBox */
+.checkbox {
+  color: var(--primary);
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.checkbox:disabled {
+  color: var(--gray300);
+}
+
+/* DatePicker */
+.date-picker {
+  color: var(--gray900);
+  background-color: transparent;
+  font-family: 'OpenSansRegular', sans-serif;
+  font-size: 14px;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.date-picker:disabled {
+  color: var(--gray200);
+}
+
+/* Editor */
+.editor {
+  color: var(--black);
+  background-color: transparent;
+  font-family: 'OpenSansRegular', sans-serif;
+  font-size: 14px;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.editor:disabled {
+  color: var(--gray300);
+}
+
+/* Entry */
+.entry {
+  color: var(--black);
+  background-color: transparent;
+  font-family: 'OpenSansRegular', sans-serif;
+  font-size: 14px;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.entry:disabled {
+  color: var(--gray300);
+}
+
+/* Frame */
+.frame {
+  background-color: var(--white);
+  border-color: var(--gray200);
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+/* ImageButton */
+.image-button {
+  opacity: 1;
+  border: none;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.image-button:disabled {
+  opacity: 0.5;
+}
+
+/* Label */
+.label {
+  color: var(--black);
+  background-color: transparent;
+  font-family: 'OpenSansRegular', sans-serif;
+  font-size: 14px;
+}
+
+.label:disabled {
+  color: var(--gray300);
+}
+
+/* Headline Label */
+.label.headline {
+  color: var(--midnight-blue);
+  font-size: 32px;
+  text-align: center;
+}
+
+/* SubHeadline Label */
+.label.sub-headline {
+  color: var(--midnight-blue);
+  font-size: 24px;
+  text-align: center;
+}
+
+/* ListView */
+.list-view {
+  --separator-color: var(--gray200);
+  --refresh-control-color: var(--gray900);
+}
+
+/* Picker */
+.picker {
+  color: var(--gray900);
+  background-color: transparent;
+  font-family: 'OpenSansRegular', sans-serif;
+  font-size: 14px;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.picker:disabled {
+  color: var(--gray300);
+}
+
+/* ProgressBar */
+.progress-bar {
+  --progress-color: var(--primary);
+}
+
+.progress-bar:disabled {
+  --progress-color: var(--gray300);
+}
+
+/* RadioButton */
+.radio-button {
+  background-color: transparent;
+  color: var(--black);
+  font-family: 'OpenSansRegular', sans-serif;
+  font-size: 14px;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.radio-button:disabled {
+  color: var(--gray300);
+}
+
+/* RefreshView */
+.refresh-view {
+  --refresh-color: var(--gray900);
+}
+
+/* SearchBar */
+.search-bar {
+  color: var(--gray900);
+  background-color: transparent;
+  font-family: 'OpenSansRegular', sans-serif;
+  font-size: 14px;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.search-bar:disabled {
+  color: var(--gray300);
+}
+
+/* SearchHandler */
+.search-handler {
+  color: var(--gray900);
+  background-color: transparent;
+  font-family: 'OpenSansRegular', sans-serif;
+  font-size: 14px;
+}
+
+.search-handler:disabled {
+  color: var(--gray300);
+}
+
+/* Shadow */
+.shadow {
+  --radius: 15px;
+  --opacity: 0.5;
+  --brush: var(--white);
+  --offset: 10px 10px;
+}
+
+/* Slider */
+.slider {
+  --minimum-track-color: var(--primary);
+  --maximum-track-color: var(--gray200);
+  --thumb-color: var(--primary);
+}
+
+.slider:disabled {
+  --minimum-track-color: var(--gray300);
+  --maximum-track-color: var(--gray300);
+  --thumb-color: var(--gray300);
+}
+
+/* SwipeItem */
+.swipe-item {
+  background-color: var(--white);
+}
+
+/* Switch */
+.switch {
+  --on-color: var(--primary);
+  --thumb-color: var(--white);
+}
+
+.switch:disabled {
+  --on-color: var(--gray300);
+  --thumb-color: var(--gray300);
+}
+
+/* TimePicker */
+.time-picker {
+  color: var(--gray900);
+  background-color: transparent;
+  font-family: 'OpenSansRegular', sans-serif;
+  font-size: 14px;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.time-picker:disabled {
+  color: var(--gray300);
+}
+
+/* Page */
+.page {
+  padding: 0;
+  background-color: var(--white);
+}
+
+/* Shell */
+.shell {
+  --background-color: var(--white);
+  --foreground-color: var(--black);
+  --title-color: var(--black);
+  --disabled-color: var(--gray200);
+  --unselected-color: var(--gray200);
+  --tab-bar-background-color: var(--white);
+  --tab-bar-foreground-color: var(--magenta);
+  --tab-bar-title-color: var(--magenta);
+  --tab-bar-unselected-color: var(--gray900);
+}
+
+/* NavigationPage */
+.navigation-page {
+  --bar-background-color: var(--white);
+  --bar-text-color: var(--gray200);
+  --icon-color: var(--gray200);
+}
+
+/* TabbedPage */
+.tabbed-page {
+  --bar-background-color: var(--white);
+  --bar-text-color: var(--magenta);
+  --unselected-tab-color: var(--gray200);
+  --selected-tab-color: var(--gray950);
+}
+
+/* Color Variables */
+:root {
+  --primary: #512BD4;
+  --primary-dark: #ac99ea;
+  --primary-dark-text: #242424;
+  --secondary: #DFD8F7;
+  --secondary-dark-text: #9880e5;
+  --tertiary: #2B0B98;
+  --white: #FFFFFF;
+  --black: #000000;
+  --magenta: #D600AA;
+  --midnight-blue: #190649;
+  --off-black: #1f1f1f;
+  --gray100: #E1E1E1;
+  --gray200: #C8C8C8;
+  --gray300: #ACACAC;
+  --gray400: #919191;
+  --gray500: #6E6E6E;
+  --gray600: #404040;
+  --gray900: #212121;
+  --gray950: #141414;
+}

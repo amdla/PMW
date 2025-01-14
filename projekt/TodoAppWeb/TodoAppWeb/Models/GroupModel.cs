@@ -1,8 +1,9 @@
-﻿namespace TodoAppWeb.Models;
-
-public class GroupModel
+﻿namespace TodoAppWeb.Models
 {
-    public int GroupId { get; set; }
-    public string Name { get; set; }
-    public List<TaskModel> Tasks { get; set; } = new List<TaskModel>();
+    public class Group
+    {
+        public int GroupId { get; set; }
+        public string Name { get; set; }
+        public virtual ICollection<TodoTask> Tasks { get; set; } = new HashSet<TodoTask>();
+    }
 }

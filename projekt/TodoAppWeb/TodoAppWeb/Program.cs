@@ -1,8 +1,10 @@
+using TodoAppWeb.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddHttpClient<ApiService>();
+builder.Services.AddHttpClient<TodoApiService>();
 
 var app = builder.Build();
 
