@@ -2,12 +2,23 @@
 
 <h1>Edit Task</h1>
 
-<form asp-action="Edit" asp-controller="Task" method="post" class="form-container">
-    <label for="Title">Title</label>
-    <input type="text" name="Title" value="@Model.Title" required class="form-input" />
+<form asp-action="EditTask"
+      asp-controller="Task"
+      method="post">
+    <input type="hidden" asp-for="TaskId"/>
+    <input type="hidden" asp-for="GroupId"/>
 
-    <label for="Description">Description</label>
-    <textarea name="Description" class="form-textarea">@Model.Description</textarea>
+    <div>
+        <label asp-for="Title"></label>
+        <input asp-for="Title"/>
+        <span asp-validation-for="Title"></span>
+    </div>
 
-    <button type="submit" class="button">Save</button>
+    <div>
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description"></textarea>
+        <span asp-validation-for="Description"></span>
+    </div>
+
+    <button type="submit">Save</button>
 </form>

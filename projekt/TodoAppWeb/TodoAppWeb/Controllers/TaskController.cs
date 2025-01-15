@@ -14,13 +14,7 @@ public class TaskController : Controller
         _apiService = apiService;
     }
 
-    public async Task<IActionResult> IndexTask()
-    {
-        var tasks = await _apiService.GetTasksAsync();
-        return View(tasks);
-    }
-
-    public IActionResult CreateTask(int groupId)
+    public async Task<IActionResult> CreateTask(int groupId)
     {
         var task = new TodoTask { GroupId = groupId };
         return View(task);
@@ -32,16 +26,17 @@ public class TaskController : Controller
         if (ModelState.IsValid)
         {
             await _apiService.AddTaskAsync(task);
-            return RedirectToAction(nameof(IndexTask));
+            return RedirectToAction("DetailsGroup", "Group", new { id = task.GroupId });
         }
 
         return View(task);
     }
 
-    public async Task<IActionResult> EditTask(int id)
+    [HttpGet]
+    public async Task<IActionResult> EditTask(int groupId, int taskId)
     {
         var tasks = await _apiService.GetTasksAsync();
-        var task = tasks.FirstOrDefault(t => t.TaskId == id);
+        var task = tasks.FirstOrDefault(t => t.TaskId == taskId && t.GroupId == groupId);
         if (task == null)
         {
             return NotFound();
@@ -56,15 +51,10 @@ public class TaskController : Controller
         if (ModelState.IsValid)
         {
             await _apiService.UpdateTaskAsync(task);
-            return RedirectToAction(nameof(IndexTask));
+            return RedirectToAction("DetailsGroup", "Group", new { id = task.GroupId });
         }
 
         return View(task);
     }
 
-    public async Task<IActionResult> DeleteTask(int id)
-    {
-        await _apiService.DeleteTaskAsync(id);
-        return RedirectToAction(nameof(IndexTask));
-    }
 }

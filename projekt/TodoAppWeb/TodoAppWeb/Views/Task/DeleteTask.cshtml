@@ -11,8 +11,9 @@
     <strong>Completed:</strong> @Model.IsCompleted
 </div>
 
-<form asp-action="Delete" asp-controller="Task" method="post">
+<form asp-action="DeleteTask" asp-controller="Group" method="post">
     <input type="hidden" name="TaskId" value="@Model.TaskId"/>
+    <input type="hidden" name="GroupId" value="@Model.GroupId"/>
     <button type="submit">Yes, Delete</button>
     <a href="/">Cancel</a>
 </form>

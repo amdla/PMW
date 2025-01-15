@@ -1,25 +1,43 @@
 ﻿@model List<TodoAppWeb.Models.Group>
 
+@{
+    // If you passed this in via controller or layout:
+    bool isEditMode = ViewBag.IsEditMode == true;
+}
+
 <h1>Groups</h1>
 
 <table class="table">
     <thead>
     <tr>
         <th>Group Name</th>
-        <th>Actions</th>
+        <!-- If you have other actions, keep this. Otherwise remove. -->
     </tr>
     </thead>
     <tbody>
     @foreach (var group in Model)
     {
         <tr>
-            <td>@group.Name</td>
             <td>
-                <a asp-action="DetailsGroup" asp-controller="Group" asp-route-id="@group.GroupId" class="btn btn-info">Details</a>
+                <!-- If in Edit Mode => go to EditGroup, else => go to DetailsGroup -->
+                <a asp-controller="Group"
+                   asp-action="@(isEditMode ? "EditGroup" : "DetailsGroup")"
+                   asp-route-id="@group.GroupId"
+                   class="text-decoration-none">
+                    @group.Name
+                </a>
             </td>
         </tr>
     }
     </tbody>
 </table>
 
-<a asp-action="CreateGroup" asp-controller="Group" class="btn btn-primary">Add Group</a>
+@section AdditionalNavButtons {
+    <li class="nav-item">
+        <a asp-action="CreateGroup"
+           asp-controller="Group"
+           class="btn btn-primary ms-2">
+            Add Group
+        </a>
+    </li>
+}

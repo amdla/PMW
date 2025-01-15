@@ -44,33 +44,9 @@ namespace TodoAppWeb.Controllers
                 return NotFound();
             }
 
-            return View(group);
-        }
-
-
-        // GET: Group/Edit/5
-        public async Task<IActionResult> EditGroup(int id)
-        {
-            var groups = await _apiService.GetGroupsAsync();
-            var group = groups.FirstOrDefault(g => g.GroupId == id);
-
-            if (group == null)
-            {
-                return NotFound();
-            }
-
-            return View(group);
-        }
-
-        // POST: Group/Edit/5
-        [HttpPost]
-        public async Task<IActionResult> EditGroup(Group group)
-        {
-            if (ModelState.IsValid)
-            {
-                await _apiService.UpdateGroupAsync(group);
-                return RedirectToAction("DetailsGroup", new { id = group.GroupId });
-            }
+            // Make sure you set IsEditMode from session so the Layout sees the correct mode
+            bool isEditMode = HttpContext.Session.GetString("IsEditMode") == "true";
+            ViewBag.IsEditMode = isEditMode;
 
             return View(group);
         }
@@ -89,6 +65,47 @@ namespace TodoAppWeb.Controllers
             }
 
             return RedirectToAction("DetailsGroup", new { id = groupId });
+        }
+
+        // GET: Group/EditGroup/123
+        public async Task<IActionResult> EditGroup(int id)
+        {
+            // 1. Get all the groups from the service or DB.
+            var groups = await _apiService.GetGroupsAsync();
+
+            // 2. Find the specific group by its ID.
+            var group = groups.FirstOrDefault(g => g.GroupId == id);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            // (Optional) Set or read IsEditMode from Session if you need to show/hide UI.
+            bool isEditMode = HttpContext.Session.GetString("IsEditMode") == "true";
+            ViewBag.IsEditMode = isEditMode;
+
+            // 3. Return the view for editing. Pass the "group" model to it.
+            return View(group);
+        }
+
+        // POST: Group/EditGroup
+        [HttpPost]
+        public async Task<IActionResult> EditGroup(Group updatedGroup)
+        {
+            // 1. Validate
+            if (!ModelState.IsValid)
+            {
+                // If validation fails, re-display the form with the user’s input
+                return View(updatedGroup);
+            }
+
+            // 2. Call your API or database to update the group
+            //    You need an UpdateGroupAsync or similar in your service:
+            //    e.g.: await _apiService.UpdateGroupAsync(updatedGroup);
+            await _apiService.UpdateGroupAsync(updatedGroup);
+
+            // 3. Once updated, redirect to the “Index” or “DetailsGroup” as you prefer
+            return RedirectToAction("Index", "Home");
         }
     }
 }

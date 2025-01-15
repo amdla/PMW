@@ -1,6 +1,5 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -10,39 +9,29 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/TodoAppWeb.styles.css" asp-append-version="true"/>
 </head>
-
 <body>
+
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Group" asp-action="Index">Groups</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                <ul class="navbar-nav flex-grow-1">
-                    <!-- Conditionally display "Add Group" or "Add Task" -->
-                    @if (ViewContext.RouteData.Values["controller"]?.ToString() == "Group")
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Group" asp-action="CreateGroup">Add Group</a>
-                        </li>
-                    }
-                    else if (ViewContext.RouteData.Values["controller"]?.ToString() == "Task")
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Task" asp-action="CreateTask">Add Task</a>
-                        </li>
-                    }
+            <!-- Brand/Logo -->
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Groups</a>
+            <ul class="navbar-nav ms-auto">
+                <!-- The 'edit' toggle button -->
+                <li class="nav-item">
+                    <a asp-action="ToggleEdit"
+                       asp-controller="Home"
+                       asp-route-returnUrl="@($"{Context.Request.Path}{Context.Request.QueryString}")"
+                       class="btn btn-outline-primary me-2">
+                        @((ViewBag.IsEditMode == true) ? "End Edit" : "Edit")
+                    </a>
+                </li>
 
-                    <!-- Edit Button -->
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" id="edit-mode-toggle" href="#">Edit Mode</a>
-                    </li>
-                </ul>
-            </div>
+
+
+                <!-- Additional buttons you inject from specific views -->
+                @RenderSection("AdditionalNavButtons", required: false)
+            </ul>
         </div>
     </nav>
 </header>
@@ -56,26 +45,6 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
-<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 @await RenderSectionAsync("Scripts", required: false)
-
-<script>
-    // Toggle Edit Mode
-    document.getElementById('edit-mode-toggle').addEventListener('click', (e) => {
-        e.preventDefault();
-        const isEditMode = localStorage.getItem('editMode') === 'true';
-        localStorage.setItem('editMode', !isEditMode);
-        location.reload(); // Reload the page to apply the edit mode
-    });
-
-    // Apply Edit Mode on Page Load
-    document.addEventListener('DOMContentLoaded', () => {
-        const isEditMode = localStorage.getItem('editMode') === 'true';
-        if (isEditMode) {
-            document.body.classList.add('edit-mode');
-        }
-    });
-</script>
 </body>
 </html>

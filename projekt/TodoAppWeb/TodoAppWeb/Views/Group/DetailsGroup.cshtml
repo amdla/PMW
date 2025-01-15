@@ -1,51 +1,51 @@
-﻿<!-- DetailsGroup.cshtml -->
-@model TodoAppWeb.Models.Group
+﻿@model TodoAppWeb.Models.Group
+
+@{
+    // This checks if you're in edit mode, which is set in GroupController.DetailsGroup
+    bool isEditMode = ViewBag.IsEditMode == true;
+}
 
 <h1>@Model.Name</h1>
 
-<ul class="list-group">
+<ul>
     @foreach (var task in Model.Tasks)
     {
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            <!-- Task Name -->
-            <span>@task.Title</span>
+        <li>
+            <!-- The 'completed' checkbox that deletes the task when clicked -->
+            <input type="checkbox"
+                   onclick="location.href='@Url.Action("DeleteTask", "Group", new { taskId = task.TaskId, groupId = Model.GroupId })'"/>
 
-            <!-- Edit and Delete Buttons for Tasks -->
             <div>
-                <a asp-action="EditTask" asp-controller="Task" asp-route-id="@task.TaskId"
-                   class="btn btn-warning btn-sm">Edit</a>
-                <button class="btn btn-danger btn-sm delete-task-btn" data-task-id="@task.TaskId">Delete</button>
+                @if (isEditMode)
+                {
+                    <!-- If we're in edit mode, the task title is a link to EditTask -->
+                    <a asp-controller="Task"
+                       asp-action="EditTask"
+                       asp-route-groupId="@Model.GroupId"
+                       asp-route-taskId="@task.TaskId">
+                        @task.Title
+                    </a>
+                }
+                else
+                {
+                    <!-- If we're not in edit mode, just display the title as plain text -->
+                    <span class="fw-bold">@task.Title</span>
+                }
             </div>
+
+            <!-- Show task description as subtext underneath the title -->
+            <div class="text-muted">@task.Description</div>
         </li>
     }
 </ul>
 
-<!-- JavaScript for Handling Task Deletion -->
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Handle task deletion
-        document.querySelectorAll('.delete-task-btn').forEach(button => {
-            button.addEventListener('click', async (e) => {
-                const taskId = e.target.getAttribute('data-task-id');
-
-                if (confirm('Are you sure you want to delete this task?')) {
-                    try {
-                        const response = await fetch(`/Task/DeleteTask?taskId=${taskId}`, {
-                            method: 'POST'
-                        });
-
-                        if (response.ok) {
-                            // Reload the page to reflect the changes
-                            location.reload();
-                        } else {
-                            alert('Failed to delete the task.');
-                        }
-                    } catch (error) {
-                        console.error('Error deleting task:', error);
-                        alert('An error occurred while deleting the task.');
-                    }
-                }
-            });
-        });
-    });
-</script>
+@section AdditionalNavButtons {
+    <li class="nav-item">
+        <a asp-action="CreateTask"
+           asp-controller="Task"
+           asp-route-groupId="@Model.GroupId"
+           class="btn btn-primary ms-2">
+            Add Task
+        </a>
+    </li>
+}
